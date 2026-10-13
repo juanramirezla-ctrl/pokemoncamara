@@ -1,0 +1,93 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="danger">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Detector de Pokémon</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="layout">
+    <div class="stage" [hidden]="mode() === 'select'">
+      <video #video class="camera" playsinline muted></video>
+      <div #guide class="guide"></div>
+    </div>
+
+    @if (mode() === 'select') {
+      <div class="ion-padding">
+        <p>Elige 3 Pokémon. Después le enseñarás a la cámara cómo se ven.</p>
+        @for (slot of slots; track slot) {
+          <ion-item>
+            <ion-select
+              [label]="'Pokémon ' + (slot + 1)" labelPlacement="stacked" placeholder="Elige uno"
+              [value]="selection()[slot]" (ionChange)="select(slot, $event)">
+              @for (p of pokemons(); track p.id) {
+                <ion-select-option [value]="p.id">{{ p.name }} #{{ p.id }}</ion-select-option>
+              }
+            </ion-select>
+          </ion-item>
+        }
+        <ion-button expand="block" color="danger" [disabled]="!canContinue() || loading()" (click)="continue()">
+          Continuar
+        </ion-button>
+      </div>
+    }
+
+    @if (mode() === 'train') {
+      <div class="panel">
+        <p>Encaja la imagen del Pokémon dentro del cuadro y toca "Capturar" ({{ samplesPerCapture }} muestras). Muévela un poco mientras captura.</p>
+        <p>Para el fondo captura varias veces con cosas distintas dentro del cuadro: tu cara, la habitación, otras imágenes que no sean tus Pokémon.</p>
+        @for (row of trainRows(); track row.label) {
+          <div class="train-row">
+            <span class="ion-text-capitalize">{{ row.name }}</span>
+            <span>{{ row.count }}/{{ row.required }}</span>
+            <ion-button size="small" color="danger" [disabled]="capturing() !== null" (click)="capture(row.label)">
+              Capturar
+            </ion-button>
+          </div>
+        }
+        <ion-button expand="block" color="danger" [disabled]="!trained() || capturing() !== null" (click)="startDetect()">
+          Detectar
+        </ion-button>
+        <ion-button fill="clear" color="light" size="small" [disabled]="capturing() !== null" (click)="resetTraining()">
+          Reiniciar
+        </ion-button>
+        <ion-button fill="clear" color="light" size="small" [disabled]="capturing() !== null" (click)="changePokemon()">
+          Cambiar Pokémon
+        </ion-button>
+      </div>
+    }
+
+    @if (mode() === 'detect') {
+      <div class="panel">
+        @if (detectedPokemon(); as p) {
+          <img [src]="p.image || 'assets/placeholder.svg'" [alt]="p.name" class="found-img" />
+          <h2 class="ion-text-capitalize">{{ p.name }} #{{ p.id | number:'3.0-0' }}</h2>
+          <div>
+            @for (t of p.types; track t) {
+              <span class="type-badge" [class]="t.toLowerCase()">{{ t }}</span>
+            }
+          </div>
+          <ion-button color="danger" (click)="openDetail(p.id)">Ver detalle</ion-button>
+        } @else if (isUnknown()) {
+          <p>Pokémon no reconocido</p>
+        } @else {
+          <p>Encaja un Pokémon dentro del cuadro</p>
+        }
+        <ion-button fill="clear" color="light" (click)="backToTrain()">Volver a entrenar</ion-button>
+      </div>
+    }
+
+    @if (loading()) {
+      <div class="panel">
+        <ion-spinner name="crescent" color="light"></ion-spinner>
+        <p>Preparando cámara y modelo...</p>
+      </div>
+    }
+
+    @if (error(); as message) {
+      <p class="error">{{ message }}</p>
+    }
+  </div>
+</ion-content>

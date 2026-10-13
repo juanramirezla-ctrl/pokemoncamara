@@ -1,0 +1,42 @@
+/* Ionic core CSS */
+@import "@ionic/angular/css/core.css";
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+@import "@ionic/angular/css/display.css";
+
+
+.type-badge {
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 12px;
+  display: inline-block;
+  margin: 2px;
+  text-transform: capitalize;
+  
+  &.flying   { background-color: #A890F0; }
+  &.steel    { background-color: #B8B8D0; color: #222; }
+  &.dark     { background-color: #705848; }
+  &.grass    { background-color: #78C850; }
+  &.fire     { background-color: #F08030; }
+  &.water    { background-color: #6890F0; }
+  &.bug      { background-color: #A8B820; }
+  &.normal   { background-color: #A8A878; }
+  &.poison   { background-color: #A040A0; }
+  &.electric { background-color: #F8D030; color: #222; }
+  &.ground   { background-color: #E0C068; color: #222; }
+  &.fairy    { background-color: #EE99AC; color: #222; }
+  &.fighting { background-color: #C03028; }
+  &.psychic  { background-color: #F85888; }
+  &.rock     { background-color: #B8A038; }
+  &.ghost    { background-color: #705898; }
+  &.ice      { background-color: #98D8D8; color: #222; }
+  &.dragon   { background-color: #7038F8; }
+}
